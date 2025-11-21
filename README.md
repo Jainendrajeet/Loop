@@ -52,9 +52,9 @@ Groq
 export GROQ_API_KEY="your-key-here"
 
 ## Run the Backend Server
-uvicorn app.main:app --reload
+uvicorn app.main:app --reload --port 8001
 
 
 ## Server will start at:
-👉 http://127.0.0.1:8000
+👉 http://127.0.0.1:8001
 
