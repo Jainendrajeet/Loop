@@ -1,49 +1,4 @@
 
-# import pandas as pd
-
-# class HospitalDB:
-#     def __init__(self, df_path="hospitals.csv"):
-#         # Read CSV into DataFrame
-#         self.df = pd.read_csv(df_path)
-#         # Add lowercase columns for easier case-insensitive search
-#         self.df['name_lower'] = self.df['Hospital'].str.lower()
-#         self.df['city_lower'] = self.df['City'].str.lower()
-
-#     def find_hospitals_by_city(self, city: str, limit: int = 5):
-#         """
-#         Returns up to `limit` hospitals in a given city.
-#         """
-#         results = self.df[self.df['city_lower'] == city.lower()]
-#         return results[['Hospital', 'Address']].head(limit).to_dict(orient='records')
-
-#     def check_hospital_in_network(self, hospital_name, city_name):
-#         """
-#         Checks if a hospital exists in the network in a given city.
-#         """
-#         name = hospital_name.lower()
-#         city = city_name.lower()
-#         match = self.df[(self.df['name_lower'] == name) & (self.df['city_lower'] == city)]
-#         return not match.empty
-
-#     # ✅ New function: search hospitals by name with optional city
-#     def find_hospitals_by_name(self, hospital_name: str, city: str = None, limit: int = 5):
-#         """
-#         Returns up to `limit` hospitals matching the name.
-#         If `city` is provided, filters by city first.
-#         Case-insensitive partial match.
-#         """
-#         name_lower = hospital_name.lower()
-#         if city:
-#             # Filter by city first
-#             df_city = self.df[self.df['city_lower'] == city.lower()]
-#         else:
-#             df_city = self.df
-
-#         # Filter by hospital name (substring match)
-#         results = df_city[df_city['name_lower'].str.contains(name_lower)]
-#         return results[['Hospital', 'Address']].head(limit).to_dict(orient='records')
-# loop_app/hospital_db.py
-
 
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -104,4 +59,5 @@ class HospitalDB:
                 )
                 return response.text
             except Exception as e:
+
                 return f"Gemini API error: {str(e)}"
