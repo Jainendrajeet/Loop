@@ -1,0 +1,83 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Loop AI Hospital Network Assistant</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1>Loop AI Hospital Assistant</h1>
+
+        <div class="chat-box" id="chatBox">
+            <div class="message system">💡 Hello! I am <span class="loop-ai">Loop AI</span>. Ask me about hospitals in your area!</div>
+        </div>
+
+        <button id="micBtn" class="mic-btn">
+            <div class="mic-icon">🎤</div>
+            <div class="ripple"></div>
+        </button>
+        <p id="status">Click the mic to start talking</p>
+    </div>
+
+    <script>
+        const micBtn = document.getElementById('micBtn');
+        const status = document.getElementById('status');
+        const chatBox = document.getElementById('chatBox');
+
+        let recognizing = false;
+        let recognition;
+
+        if ('webkitSpeechRecognition' in window) {
+            recognition = new webkitSpeechRecognition();
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            recognition.lang = 'en-US';
+            
+
+            recognition.onstart = () => {
+                recognizing = true;
+                status.innerText = "🎙️ Listening...";
+                micBtn.classList.add("listening");
+            };
+
+            recognition.onend = () => {
+                recognizing = false;
+                status.innerText = "Click the mic to start talking";
+                micBtn.classList.remove("listening");
+            };
+
+            recognition.onresult = async (event) => {
+                const transcript = event.results[0][0].transcript;
+
+                const userMsg = document.createElement('div');
+                userMsg.className = 'message user';
+                userMsg.innerHTML = `<b>You:</b> ${transcript}`;
+                chatBox.appendChild(userMsg);
+                chatBox.scrollTop = chatBox.scrollHeight;
+
+                const formData = new FormData();
+                formData.append("user_query", transcript);
+                const res = await fetch("/query", {method: "POST", body: formData});
+                const data = await res.json();
+
+                const aiMsg = document.createElement('div');
+                aiMsg.className = 'message ai';
+                aiMsg.innerHTML = `<b>Loop AI:</b> ${data.response}`;
+                chatBox.appendChild(aiMsg);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            };
+        }
+
+        micBtn.onclick = () => {
+            if (recognizing) {
+                recognition.stop();
+            } else {
+                recognition.start();
+            }
+        };
+    </script>
+</body>
+</html>

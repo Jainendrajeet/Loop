@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+pandas
+openai
+python-multipart
+jinja2
+groq
+faiss-cpu
+numpy
+google.generativeai
+google-genai  
